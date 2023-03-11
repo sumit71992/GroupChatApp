@@ -30,7 +30,7 @@
     <div class="container-fluid p-5">
         <div class="container width border border-secondary">
             <h6 class="text-center message text-danger"></h6>
-            <h3 class="text-center text-secondary mt-3">Signin to ExpenseTracker App</h3>
+            <h3 class="text-center text-secondary mt-3">Signin to GroupChat App</h3>
             <form class="form">
                 <div class="email p-2">
                     <label for="email">Email:</label>
@@ -67,7 +67,7 @@
                     email: email.value,
                     password: password.value
                 };
-                const user = await axios.post('http://3.109.42.131:3000/user/signin', obj);
+                const user = await axios.post('http://localhost:3000/user/signin', obj);
                 let msg = user.data.message;
                 message.className = 'text-success text-center';
                 message.appendChild(document.createTextNode(msg));
@@ -77,15 +77,6 @@
                 let msg = err.response.data.message;
                 message.appendChild(document.createTextNode(msg));
                 setTimeout(() => { window.location.reload() }, 3000);
-            }
-        });
-
-        //onload
-        window.addEventListener('DOMContentLoaded', async () => {
-            const token = await localStorage.getItem('token');
-            if (token) {
-                console.log("hi")
-                await location.replace('./index.html');
             }
         });
     </script>
