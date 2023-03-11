@@ -76,7 +76,9 @@
             };
             const user = await axios.post("http://localhost:3000/user/signup", obj);
             if (user.data.message) {
-                message.appendChild(document.createTextNode(user.data.message));
+                await alert(user.data.message);
+                // await location.replace("./signin.html");
+                // message.appendChild(document.createTextNode(user.data.message));
             } else {
                 window.location.replace("./signin.html");
             }
