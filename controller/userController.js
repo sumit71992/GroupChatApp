@@ -51,7 +51,7 @@ const signin = async (req, res) => {
       const signedUser = await bcrypt.compare(password, user.password);
       if(signedUser){
         await t.commit();
-        return res.status(200).json({message:"Signin success", token: authUser(5,"sumit")});
+        return res.status(200).json({message:"Signin success", token: authUser(user.id,user.email)});
       }else{
         await t.commit();
         return res.status(401).json({message:"User not authorised"})
