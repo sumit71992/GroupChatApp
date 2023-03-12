@@ -60,28 +60,35 @@
         const msg = document.querySelector('.msg');
         const message = document.getElementById('message');
         const token = localStorage.getItem("token");
+        // send messages
         msg.addEventListener("click", async (e) => {
             e.preventDefault();
             const obj = {
                 message: message.value
             }
             const response = await axios.post("http://localhost:3000/chat/postmessage", obj, { headers: { 'Authorization': token } });
+            message.value="";
             console.log(response)
         })
 
         //get all messages
         const ul = document.querySelector('.chat-list');
         window.addEventListener("DOMContentLoaded", async () => {
-        //    setInterval(async() => {
+            let len =0
+           setInterval(async() => {
             const response = await axios.get("http://localhost:3000/chat/getchat", { headers: { 'Authorization': token } });
             const chats = response.data.chats;
-            for (let i of chats) {
+            const length = chats.length;
+           if(len!==length){
+            for (let i=len; i<length; i++) {
                 const li = document.createElement('li');
                 li.className = "p-3";
-                li.appendChild(document.createTextNode(i.userName+":"+" "+i.message));
+                li.appendChild(document.createTextNode(chats[i].userName+":"+" "+chats[i].message));
                 ul.appendChild(li);
             }
-        //    }, 1000);
+           }
+            len=length;
+           }, 1000);
         })
 
     </script>
