@@ -6,6 +6,7 @@ const postChat = async (req, res, next) => {
     const message = req.body.message;
     await req.user.createChat({
       message,
+      userName: req.user.name
     });
     return res.status(200).json({ message: "chat added" });
   } catch (err) {

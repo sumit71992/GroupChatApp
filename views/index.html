@@ -70,19 +70,20 @@
         })
 
         //get all messages
-const ul = document.querySelector('.chat-list');
-        window.addEventListener("DOMContentLoaded",async()=>{
-            const response = await axios.get("http://localhost:3000/chat/getchat",{headers:{'Authorization':token}});
+        const ul = document.querySelector('.chat-list');
+        window.addEventListener("DOMContentLoaded", async () => {
+        //    setInterval(async() => {
+            const response = await axios.get("http://localhost:3000/chat/getchat", { headers: { 'Authorization': token } });
             const chats = response.data.chats;
-            console.log(chats)
-            // for(let i of chats){
-            //     const li = document.createElement('li');
-            //     li.className="p-3";
-            //     li.appendChild(document.createTextNode(i.message));
-            //     ul.appendChild(li);
-            // }
+            for (let i of chats) {
+                const li = document.createElement('li');
+                li.className = "p-3";
+                li.appendChild(document.createTextNode(i.userName+":"+" "+i.message));
+                ul.appendChild(li);
+            }
+        //    }, 1000);
         })
-        
+
     </script>
 </body>
 
