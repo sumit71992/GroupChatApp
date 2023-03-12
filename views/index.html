@@ -47,12 +47,7 @@
     <div class="container-fluid p-5">
         <div class="container width">
             <h3 class="text-center text-secondary mt-3">GroupChat App</h3>
-            <ul class="list-unstyled mt-3">
-                <li class="py-1 px-3">You Joined</li>
-                <li class="py-1 px-3">Rahul Joinrd</li>
-                <li class="py-1 px-3">Rahul: Hii</li>
-                <li class="py-1 px-3">You:How r u?</li>
-                <li class="py-1 px-3">Rahul: Good</li>
+            <ul class="list-unstyled mt-3 chat-list">
             </ul>
         </div>
 
@@ -64,15 +59,30 @@
     <script>
         const msg = document.querySelector('.msg');
         const message = document.getElementById('message');
+        const token = localStorage.getItem("token");
         msg.addEventListener("click", async (e) => {
             e.preventDefault();
-            const token = localStorage.getItem("token");
             const obj = {
                 message: message.value
             }
             const response = await axios.post("http://localhost:3000/chat/postmessage", obj, { headers: { 'Authorization': token } });
             console.log(response)
         })
+
+        //get all messages
+const ul = document.querySelector('.chat-list');
+        window.addEventListener("DOMContentLoaded",async()=>{
+            const response = await axios.get("http://localhost:3000/chat/getchat",{headers:{'Authorization':token}});
+            const chats = response.data.chats;
+            console.log(chats)
+            // for(let i of chats){
+            //     const li = document.createElement('li');
+            //     li.className="p-3";
+            //     li.appendChild(document.createTextNode(i.message));
+            //     ul.appendChild(li);
+            // }
+        })
+        
     </script>
 </body>
 
