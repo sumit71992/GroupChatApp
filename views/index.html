@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.2/axios.min.js"
+        integrity="sha512-NCiXRSV460cHD9ClGDrTbTaw0muWUBf/zB/yLzJavRsPNUl9ODkUVmUHsZtKu17XknhsGlmyVoJxLg/ZQQEeGA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Home</title>
+    <style>
+        .width {
+            width: 50%;
+        }
+
+        .send {
+            position: fixed;
+            background-color: rgb(6, 58, 107);
+            width: 100vw;
+            bottom: 0px;
+        }
+
+        li {
+            background: white;
+        }
+
+        li:nth-child(odd) {
+            background: rgb(207, 207, 207);
+        }
+
+        @media only screen and (max-width: 768px) {
+            .width {
+                width: 75%;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-5">
+        <div class="container width">
+            <h3 class="text-center text-secondary mt-3">GroupChat App</h3>
+            <ul class="list-unstyled mt-3">
+                <li class="py-1 px-3">You Joined</li>
+                <li class="py-1 px-3">Rahul Joinrd</li>
+                <li class="py-1 px-3">Rahul: Hii</li>
+                <li class="py-1 px-3">You:How r u?</li>
+                <li class="py-1 px-3">Rahul: Good</li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="d-flex send justify-content-center p-2">
+        <input class="w-50" type="text">
+        <button class="btn btn-light ">Send</button>
+    </div>
+</body>
+
+</html>
