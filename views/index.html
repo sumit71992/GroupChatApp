@@ -67,28 +67,46 @@
                 message: message.value
             }
             const response = await axios.post("http://localhost:3000/chat/postmessage", obj, { headers: { 'Authorization': token } });
-            message.value="";
+            message.value = "";
             console.log(response)
         })
 
         //get all messages
         const ul = document.querySelector('.chat-list');
         window.addEventListener("DOMContentLoaded", async () => {
-            let len =0
-           setInterval(async() => {
-            const response = await axios.get("http://localhost:3000/chat/getchat", { headers: { 'Authorization': token } });
-            const chats = response.data.chats;
-            const length = chats.length;
-           if(len!==length){
-            for (let i=len; i<length; i++) {
-                const li = document.createElement('li');
-                li.className = "p-3";
-                li.appendChild(document.createTextNode(chats[i].userName+":"+" "+chats[i].message));
-                ul.appendChild(li);
-            }
-           }
-            len=length;
-           }, 1000);
+            let len = 0;
+            
+            let oldMessage = localStorage.getItem("messages");
+            let oldMessages = oldMessage?JSON.parse(oldMessage):[{}];
+            const msg = oldMessages;
+            for (let i = len; i < oldMessages.length; i++) {
+                        const li = document.createElement('li');
+                        li.className = "p-3";
+                        li.appendChild(document.createTextNode(oldMessages[i].userName + ":" + " " + oldMessages[i].message));
+                        ul.appendChild(li);
+                    }
+            let lastMessage = (oldMessages[oldMessages.length - 1]);
+            setInterval(async () => {
+                const response = await axios.get(`http://localhost:3000/chat/getchat?lastId=${lastMessage.id}`, { headers: { 'Authorization': token } });
+                const chats = response.data.chats;
+                const length = chats.length;
+                if (len !== length) {
+                    for (let i = len; i < length; i++) {
+                        if(msg.length<=10){
+                            msg.push(chats[i]);
+                        }else if(msg.length>10){
+                            msg.shift();
+                            msg.push(chats[i]);
+                        }
+                        const li = document.createElement('li');
+                        li.className = "p-3";
+                        li.appendChild(document.createTextNode(chats[i].userName + ":" + " " + chats[i].message));
+                        ul.appendChild(li);
+                    }
+                    localStorage.setItem("messages", JSON.stringify(msg));
+                }
+                len = length;
+            }, 1000);
         })
 
     </script>
