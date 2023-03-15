@@ -11,7 +11,6 @@ const Chat = sequelize.define("chats",{
   },
   message:Sequelize.STRING,
   userName: Sequelize.STRING,
-  userId: Sequelize.INTEGER
 });
 
 module.exports = Chat;

@@ -7,6 +7,8 @@ const chatRoutes = require("./routes/chatRoutes");
 
 const User = require('./models/userModel');
 const Chat = require('./models/chatModel');
+const Group = require('./models/groupsModel');
+const UserGroup = require('./models/usersGroupsModel');
 
 const port = process.env.PORT || 3000;
 
@@ -22,6 +24,12 @@ app.use("/chat", chatRoutes);
 
 Chat.belongsTo(User);
 User.hasMany(Chat);
+Group.hasMany(User);
+User.hasMany(Group);
+UserGroup.belongsTo(User);
+UserGroup.belongsTo(Group);
+Group.hasMany(UserGroup);
+User.hasMany(UserGroup);
 sequelize.sync().then((res) => {
   app
     .listen(port, () => {
