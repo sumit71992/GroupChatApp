@@ -8,6 +8,12 @@
 .width{
     width: 35%;
 }
+.show{
+    display: block;
+}
+.hide{
+    display: none;
+}
 @media only screen and (max-width: 768px){
     .width{
         width: 75%;

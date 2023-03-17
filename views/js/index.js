@@ -58,7 +58,5 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 const createGroup = document.querySelector(".create-group");
 createGroup.addEventListener('click',async(e)=>{
-    await axios.post("http://localhost:3000/chat/creategroup",{
-        headers:{"Authorization":token}
-    });
-})
+    document.querySelector('.create-group-container').classList.add("hide");
+});

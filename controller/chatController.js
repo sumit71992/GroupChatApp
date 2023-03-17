@@ -73,13 +73,23 @@ const postGroupMessage = async (req, res) => {
 };
 
 const getGroupMessages = async(req,res)=>{
-  const groupId = req.params.id;
-  const msg = await UserGroup.findAll({
-    where:{
-      groupId : groupId,
+  try{
+    const groupId = req.params.id;
+    const msg = await UserGroup.findAll({
+      where:{
+        groupId : groupId,
+      }
+    });
+    if(msg.userId===req.user.id){
+      return res.status(200).json({msg});
+    }else{
+      return res.status(400).json({message:"You are not part of this group"});
     }
-  });
-  return res.status(200).json({msg});
+  }catch(err){
+    return res.status(500).json({message:"Something wrong",Error:err});
+  }
+  
+  
 }
 module.exports = {
   postChat,
