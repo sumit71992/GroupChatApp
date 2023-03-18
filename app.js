@@ -9,6 +9,7 @@ const User = require('./models/userModel');
 const Chat = require('./models/chatModel');
 const Group = require('./models/groupsModel');
 const UserGroup = require('./models/usersGroupsModel');
+const Admin = require('./models/adminModel');
 
 const port = process.env.PORT || 3000;
 
@@ -30,6 +31,10 @@ UserGroup.belongsTo(User);
 UserGroup.belongsTo(Group);
 Group.hasMany(UserGroup);
 User.hasMany(UserGroup);
+User.hasMany(Admin);
+Group.hasMany(Admin);
+Admin.belongsTo(User);
+Admin.belongsTo(Group);
 sequelize.sync().then((res) => {
   app
     .listen(port, () => {

@@ -1,14 +1,12 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const Group = sequelize.define("groups",{
-    id: {
+const Admin = sequelize.define("admins",{
+    id:{
         type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true,
         autoIncrement: true,
+        allowNull: false,
         primaryKey: true,
-      },
-      groupName:Sequelize.STRING,
+    },
 });
-module.exports=Group;
+module.exports = Admin;

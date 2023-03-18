@@ -3,6 +3,7 @@ const Chat = require("../models/chatModel");
 const Group = require("../models/groupsModel");
 const UserGroup = require("../models/usersGroupsModel");
 const { Op } = require("sequelize");
+const Admin = require("../models/adminModel");
 
 const postChat = async (req, res, next) => {
   try {
@@ -40,11 +41,13 @@ const createGroup = async (req, res) => {
     const groupName = req.body.groupname;
     const group = await req.user.createGroup({
       groupName,
-      adminName: req.user.name,
     });
     await UserGroup.create({
       message: null,
       userId: req.user.id,
+      groupId: group.id,
+    });
+    await req.user.createAdmin({
       groupId: group.id,
     });
     return res.status(200).json({ message: "Group created successfully" });
@@ -60,37 +63,48 @@ const postGroupMessage = async (req, res) => {
   try {
     const groupId = req.params.id;
     const message = req.body.message;
+    console.log(req.user.id);
     await UserGroup.create({
       message,
       userId: req.user.id,
       groupId,
     });
-    return res.status(200).json({message:"send successfully"});
+    return res.status(200).json({ message: "send successfully" });
   } catch (err) {
     console.log(err);
     return res.ststus(500).json({ message: "Something wrong", Error: err });
   }
 };
 
-const getGroupMessages = async(req,res)=>{
-  try{
+const getGroupMessages = async (req, res) => {
+  try {
     const groupId = req.params.id;
     const msg = await UserGroup.findAll({
-      where:{
-        groupId : groupId,
+      where: {
+        groupId: groupId,
+      },
+      include:{
+        model: User,
+        attributes:['name']
       }
     });
-    if(msg.userId===req.user.id){
-      return res.status(200).json({msg});
-    }else{
-      return res.status(400).json({message:"You are not part of this group"});
+    const result =  msg.filter(v=>v.message!==null);
+    for (let i of msg) {
+      if (i.userId === req.user.id) {
+        return res.status(200).json({ result });
+      }
     }
-  }catch(err){
-    return res.status(500).json({message:"Something wrong",Error:err});
+    
+    return res.status(400).json({ message: "You are not part of this group" });
+    // if(msg.userId===req.user.id){
+    // return res.status(200).json({ msg });
+    // }else{
+    //   return res.status(400).json({message:"You are not part of this group"});
+    // }
+  } catch (err) {
+    return res.status(500).json({ message: "Something wrong", Error: err });
   }
-  
-  
-}
+};
 module.exports = {
   postChat,
   getAllChat,
