@@ -12,41 +12,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Home</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .width {
-            width: 50%;
-        }
-
-        .send {
-            position: fixed;
-            background-color: rgb(6, 58, 107);
-            bottom: 0px;
-        }
-
-        li {
-            background: white;
-        }
-
-        li:nth-child(odd) {
-            background: rgb(207, 207, 207);
-        }
-
-        .chat-grid {
-            display: grid;
-            grid-template-columns: 1fr 3.5fr;
-            column-gap: 1rem;
-        }
-
-        @media only screen and (max-width: 768px) {
-            .width {
-                width: 75%;
-            }
-
-            h3 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -56,12 +21,21 @@
                 <div class="container create-group-container">
                     <button class="btn btn-secondary create-group">Create new group</button>
                 </div>
-
+                <div class="create-group-form hide">
+                    <form action="" class="d-flex gap-3">
+                        <input type="text" id="groupname" name="groupname" value="" placeholder="Enter group name">
+                        <button class="btn bg-secondary create">&gt</button>
+                    </form>
+                </div>
+                <div class="group-list">
+                    <ul class="list-unstyled mt-3 group-ul">
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="chat-section">
             <div class="container-fluid p-5">
-                <div class="container width">
+                <div class="container groupChatAppWidth">
                     <h3 class="text-center text-secondary mt-3">GroupChat App</h3>
                     <ul class="list-unstyled mt-3 chat-list">
                     </ul>

@@ -16,23 +16,35 @@ msg.addEventListener("click", async (e) => {
 const ul = document.querySelector('.chat-list');
 window.addEventListener("DOMContentLoaded", async () => {
     let len = 0;
-
     let oldMessage = localStorage.getItem("messages");
     let oldMessages = oldMessage ? JSON.parse(oldMessage) : [{}];
     const msg = oldMessages;
     for (let i = len; i < oldMessages.length; i++) {
         if(oldMessages[i].userName!==undefined){
             const li = document.createElement('li');
-            li.className = "p-3";
+            li.className = "li p-3";
             li.appendChild(document.createTextNode(oldMessages[i].userName + ":" + " " + oldMessages[i].message));
             ul.appendChild(li);
         }
     }
     let lastMessage = (oldMessages[oldMessages.length - 1]);
+const groups = await axios.get(`http://localhost:3000/chat/getallgroups`,{
+    headers:{'Authorization':token}
+});
+const groupList = groups.data.groups;
+for(let i of groupList){
+    const ul = document.querySelector('.group-ul');
+    const li = document.createElement("li");
+    li.className="bg-color my-3";
+    const btn = document.createElement('button');
+    btn.className="btn";
+    btn.appendChild(document.createTextNode(i.group.groupName));
+    li.appendChild(btn);
+    ul.appendChild(li);
+}
     setInterval(async () => {
-        const response = await axios.get(`http://localhost:3000/chat/getchat?lastId=${lastMessage.id}`, { headers: { 'Authorization': token } });
+        const response = await axios.get(`http://localhost:3000/chat/getallchat?lastId=${lastMessage.id}`, { headers: { 'Authorization': token } });
         const chats = response.data.chats;
-        console.log("chats",chats.length);
         const length = chats.length;
         if (len !== length && length>0) {
             for (let i = len; i < length; i++) {
@@ -46,7 +58,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                     msg.push(chats[i]);
                 }
                 const li = document.createElement('li');
-                li.className = "p-3";
+                li.className = "li p-3";
                 li.appendChild(document.createTextNode(chats[i].userName + ":" + " " + chats[i].message));
                 ul.appendChild(li);
             }
@@ -55,8 +67,24 @@ window.addEventListener("DOMContentLoaded", async () => {
         len = length;
     }, 1000);
 })
-
+//create group
 const createGroup = document.querySelector(".create-group");
 createGroup.addEventListener('click',async(e)=>{
     document.querySelector('.create-group-container').classList.add("hide");
+    document.querySelector('.create-group-form').classList.remove('hide');
 });
+const gName = document.getElementById('groupname');
+const create = document.querySelector('.create');
+create.addEventListener('click', async(e)=>{
+    e.preventDefault()
+    const groupName= gName.value;
+    if(groupName!==""){
+        const obj={
+            groupName,
+        }
+        await axios.post("http://localhost:3000/chat/creategroup", obj,{headers:{'Authorization':token}});
+        await location.reload();
+    }else{
+        alert("group name can't be empty");
+    }
+})

@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const Chat = require("../models/chatModel");
 const Group = require("../models/groupsModel");
 const UserGroup = require("../models/usersGroupsModel");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const Admin = require("../models/adminModel");
 
 const postChat = async (req, res, next) => {
@@ -28,7 +28,6 @@ const getAllChat = async (req, res) => {
         },
       },
     });
-
     return res.status(200).json({ chats });
   } catch (err) {
     console.log(err);
@@ -38,7 +37,7 @@ const getAllChat = async (req, res) => {
 
 const createGroup = async (req, res) => {
   try {
-    const groupName = req.body.groupname;
+    const groupName = req.body.groupName;
     const group = await req.user.createGroup({
       groupName,
     });
@@ -83,18 +82,18 @@ const getGroupMessages = async (req, res) => {
       where: {
         groupId: groupId,
       },
-      include:{
+      include: {
         model: User,
-        attributes:['name']
+        attributes: ['name']
       }
     });
-    const result =  msg.filter(v=>v.message!==null);
+    const result = msg.filter(v => v.message !== null);
     for (let i of msg) {
       if (i.userId === req.user.id) {
         return res.status(200).json({ result });
       }
     }
-    
+
     return res.status(400).json({ message: "You are not part of this group" });
     // if(msg.userId===req.user.id){
     // return res.status(200).json({ msg });
@@ -105,10 +104,61 @@ const getGroupMessages = async (req, res) => {
     return res.status(500).json({ message: "Something wrong", Error: err });
   }
 };
+
+const addUserToGroup = async (req, res) => {
+  try {
+    const groupId = req.params.id;
+    await UserGroup.create({
+      message: null,
+      userId: req.user.id,
+      groupId: groupId,
+    });
+    return res.status(200).json({ message: "Successfully added to group" });
+  } catch (err) {
+    console.log("Eroor", err);
+    return res.status(500).json({ message: "Something wrong", Error: err });
+  }
+}
+const removeDuplicates = (obj) => {
+  let newArray = [];
+  let uniqueObject = {};
+  for (let i in obj) {
+    objGroupId = obj[i]['groupId'];
+    uniqueObject[objGroupId] = obj[i];
+  }
+  for (i in uniqueObject) {
+    newArray.push(uniqueObject[i]);
+  }
+  return newArray;
+}
+const getallgroups = async (req, res) => {
+  try {
+    const groups = await UserGroup.findAll({
+      where: {
+        userId: req.user.id,
+
+      },
+      attributes: ["id", "groupId", "userId"],
+      groupId: {
+        distinct: true,
+      },
+      include: {
+        model: Group,
+        attributes: ['groupName']
+      }
+    });
+    return res.status(200).json({ message: "Fetched Successfully", groups:removeDuplicates(groups) })
+  } catch (err) {
+    console.log("Error", err);
+    return res.status(500).json({ message: "Something wrong", Error: err });
+  }
+}
 module.exports = {
   postChat,
   getAllChat,
   createGroup,
   postGroupMessage,
   getGroupMessages,
+  addUserToGroup,
+  getallgroups
 };
