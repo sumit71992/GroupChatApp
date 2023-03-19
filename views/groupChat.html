@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.2/axios.min.js"
         integrity="sha512-NCiXRSV460cHD9ClGDrTbTaw0muWUBf/zB/yLzJavRsPNUl9ODkUVmUHsZtKu17XknhsGlmyVoJxLg/ZQQEeGA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <title>Home</title>
+    <title>GroupChat</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -36,7 +36,7 @@
         <div class="chat-section">
             <div class="container-fluid p-5 chat-section-container">
                 <div class="container groupChatAppWidth">
-                    <h3 class="text-center text-secondary mt-3">GroupChat App</h3>
+                    <h3 class="text-center text-secondary mt-3"></h3>
                     <ul class="list-unstyled mt-3 chat-list">
                     </ul>
                 </div>
@@ -44,11 +44,10 @@
             </div>
         </div>
         <div class="d-flex send w-100 justify-content-center p-2">
-            <input class="w-50" type="text" name="message" id="message" value="">
-            <button class="btn btn-light msg">Send</button>
+            <input class="w-50 hide send-input" type="text" name="message" id="message" value="">
         </div>
     </div>
-    <script src="/views/js/index.js"></script>
+    <script src="/views/js/group.js"></script>
 </body>
 
 </html>

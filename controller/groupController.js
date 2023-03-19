@@ -32,7 +32,7 @@ const postGroupMessage = async (req, res) => {
     const message = req.body.message;
     await req.user.createChat({
       message,
-      userName:req.user.name,
+      userName: req.user.name,
       userId: req.user.id,
       groupId,
     });
@@ -46,23 +46,42 @@ const postGroupMessage = async (req, res) => {
 const getGroupMessages = async (req, res) => {
   try {
     const groupId = req.params.id;
-    const msg = await Chat.findAll({
+    const isInGroup = await UserGroup.findAll({
       where: {
         groupId: groupId,
-      },
-      attributes:['id','message','groupId','userId'],
-      include: {
-        model: User,
-        attributes: ["name"],
-      },
-    });
-    for (let i of msg) {
-      if (i.userId === req.user.id) {
-        return res.status(200).json({ msg });
+        userId: req.user.id
       }
+    });
+    if (isInGroup) {
+      const groupName = await Group.findOne({
+        where: {
+          id: groupId
+        },
+        attributes: ['groupName']
+      });
+      const msg = await Chat.findAll({
+        where: {
+          groupId: groupId,
+        },
+        attributes: ['id', 'message', 'groupId', 'userId'],
+        include: {
+          model: User,
+          attributes: ["name"],
+        },
+      });
+      if(msg.length>0){
+        for (let i of msg) {
+          if (i.userId === req.user.id) {
+            return res.status(200).json({ msg, groupName });
+          }
+        }
+      }else{
+        return res.status(200).json({groupName});
+      }
+      
+    } else {
+      return res.status(400).json({ message: "You are not part of this group" });
     }
-
-    return res.status(400).json({ message: "You are not part of this group" });
   } catch (err) {
     return res.status(500).json({ message: "Something wrong", Error: err });
   }
@@ -83,7 +102,7 @@ const addUserToGroup = async (req, res) => {
         groupId,
       });
       return res.status(200).json({ message: "Successfully added to group" });
-    }else{
+    } else {
       return res.status(200).json({ message: "You already part of this group" });
     }
 
