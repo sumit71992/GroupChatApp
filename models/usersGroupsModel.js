@@ -6,9 +6,8 @@ const Usergroup = sequelize.define("usersgroups",{
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
-        unique: true,
         primaryKey: true,
     },
-    message: Sequelize.STRING,
+    isAdmin: Sequelize.BOOLEAN
 });
 module.exports=Usergroup;

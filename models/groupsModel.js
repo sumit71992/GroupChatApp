@@ -5,7 +5,6 @@ const Group = sequelize.define("groups",{
     id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
         autoIncrement: true,
         primaryKey: true,
       },

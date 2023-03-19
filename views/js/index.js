@@ -28,23 +28,24 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     }
     let lastMessage = (oldMessages[oldMessages.length - 1]);
-const groups = await axios.get(`http://localhost:3000/chat/getallgroups`,{
-    headers:{'Authorization':token}
-});
-const groupList = groups.data.groups;
-for(let i of groupList){
-    const ul = document.querySelector('.group-ul');
-    const li = document.createElement("li");
-    li.className="bg-color my-3";
-    const btn = document.createElement('button');
-    btn.className="btn";
-    btn.appendChild(document.createTextNode(i.group.groupName));
-    li.appendChild(btn);
-    ul.appendChild(li);
-}
+// const groups = await axios.get(`http://localhost:3000/chat/getallgroups`,{
+//     headers:{'Authorization':token}
+// });
+// const groupList = groups.data.groups;
+// for(let i of groupList){
+//     const ul = document.querySelector('.group-ul');
+//     const li = document.createElement("li");
+//     li.className="bg-color my-3";
+//     const btn = document.createElement('button');
+//     btn.className="btn";
+//     btn.appendChild(document.createTextNode(i.group.groupName));
+//     li.appendChild(btn);
+//     ul.appendChild(li);
+// }
     setInterval(async () => {
         const response = await axios.get(`http://localhost:3000/chat/getallchat?lastId=${lastMessage.id}`, { headers: { 'Authorization': token } });
         const chats = response.data.chats;
+        console.log("ch",chats)
         const length = chats.length;
         if (len !== length && length>0) {
             for (let i = len; i < length; i++) {
@@ -65,7 +66,7 @@ for(let i of groupList){
             localStorage.setItem("messages", JSON.stringify(msg));
         }
         len = length;
-    }, 1000);
+    }, 100000);
 })
 //create group
 const createGroup = document.querySelector(".create-group");
@@ -82,7 +83,7 @@ create.addEventListener('click', async(e)=>{
         const obj={
             groupName,
         }
-        await axios.post("http://localhost:3000/chat/creategroup", obj,{headers:{'Authorization':token}});
+        await axios.post("http://localhost:3000/group/creategroup", obj,{headers:{'Authorization':token}});
         await location.reload();
     }else{
         alert("group name can't be empty");
