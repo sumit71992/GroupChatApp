@@ -10,10 +10,10 @@ const createGroup = async (req, res) => {
     const group = await req.user.createGroup({
       groupName,
     });
-    const groupId = 2;
+    const groupId = group.id;
     console.log(groupId)
     await UserGroup.create({
-      isAdmin: 1,
+      isAdmin: true,
       groupId,
       userId: req.user.id,
     });
@@ -30,9 +30,9 @@ const postGroupMessage = async (req, res) => {
   try {
     const groupId = req.params.id;
     const message = req.body.message;
-    console.log(req.user.id);
-    await UserGroup.create({
+    await req.user.createChat({
       message,
+      userName:req.user.name,
       userId: req.user.id,
       groupId,
     });
@@ -46,28 +46,23 @@ const postGroupMessage = async (req, res) => {
 const getGroupMessages = async (req, res) => {
   try {
     const groupId = req.params.id;
-    const msg = await UserGroup.findAll({
+    const msg = await Chat.findAll({
       where: {
         groupId: groupId,
       },
+      attributes:['id','message','groupId','userId'],
       include: {
         model: User,
         attributes: ["name"],
       },
     });
-    const result = msg.filter((v) => v.message !== null);
     for (let i of msg) {
       if (i.userId === req.user.id) {
-        return res.status(200).json({ result });
+        return res.status(200).json({ msg });
       }
     }
 
     return res.status(400).json({ message: "You are not part of this group" });
-    // if(msg.userId===req.user.id){
-    // return res.status(200).json({ msg });
-    // }else{
-    //   return res.status(400).json({message:"You are not part of this group"});
-    // }
   } catch (err) {
     return res.status(500).json({ message: "Something wrong", Error: err });
   }
@@ -76,12 +71,22 @@ const getGroupMessages = async (req, res) => {
 const addUserToGroup = async (req, res) => {
   try {
     const groupId = req.params.id;
-    await UserGroup.create({
-      message: null,
-      userId: req.user.id,
-      groupId: groupId,
+    const findGroup = await UserGroup.findAll({
+      where: {
+        groupId: groupId,
+        userId: req.user.id
+      },
     });
-    return res.status(200).json({ message: "Successfully added to group" });
+    if (!findGroup) {
+      await UserGroup.create({
+        userId: req.user.id,
+        groupId,
+      });
+      return res.status(200).json({ message: "Successfully added to group" });
+    }else{
+      return res.status(200).json({ message: "You already part of this group" });
+    }
+
   } catch (err) {
     console.log("Eroor", err);
     return res.status(500).json({ message: "Something wrong", Error: err });
@@ -99,7 +104,7 @@ const removeDuplicates = (obj) => {
   }
   return newArray;
 };
-const getallgroups = async (req, res) => {
+const getAllGroups = async (req, res) => {
   try {
     const groups = await UserGroup.findAll({
       where: {
@@ -128,5 +133,5 @@ module.exports = {
   postGroupMessage,
   getGroupMessages,
   addUserToGroup,
-  getallgroups,
+  getAllGroups,
 };

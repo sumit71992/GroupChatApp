@@ -5,8 +5,11 @@ const authenticate = (req,res,next)=>{
     try{
         const token = req.header('Authorization');
         const user = jwt.verify(token, process.env.JWT_SECRET);
+        // console.log("user",user.userId)
         User.findByPk(user.userId).then(usr=>{
+            // console.log("usr",usr)
             req.user=usr;
+            // console.log(">>>>>>>>>>>>>",req.user)
             next();
         })
     }catch(err){

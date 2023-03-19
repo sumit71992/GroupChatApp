@@ -27,8 +27,14 @@ app.use("/group", groupRoutes);
 Chat.belongsTo(User);
 User.hasMany(Chat);
 
-User.belongsToMany(Group,{through: UserGroup});
-Group.belongsToMany(User,{through: UserGroup});
+Group.belongsTo(User);
+User.hasMany(Group);
+
+
+UserGroup.belongsTo(Group);
+UserGroup.belongsTo(User);
+Group.hasMany(UserGroup);
+User.hasMany(UserGroup)
 
 
 sequelize.sync().then(() => {

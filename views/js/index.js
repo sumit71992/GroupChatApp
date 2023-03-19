@@ -28,20 +28,20 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     }
     let lastMessage = (oldMessages[oldMessages.length - 1]);
-// const groups = await axios.get(`http://localhost:3000/chat/getallgroups`,{
-//     headers:{'Authorization':token}
-// });
-// const groupList = groups.data.groups;
-// for(let i of groupList){
-//     const ul = document.querySelector('.group-ul');
-//     const li = document.createElement("li");
-//     li.className="bg-color my-3";
-//     const btn = document.createElement('button');
-//     btn.className="btn";
-//     btn.appendChild(document.createTextNode(i.group.groupName));
-//     li.appendChild(btn);
-//     ul.appendChild(li);
-// }
+const groups = await axios.get("http://localhost:3000/group/getallgroups",{
+    headers:{'Authorization':token}
+});
+const groupList = groups.data.groups;
+for(let i of groupList){
+    const ul = document.querySelector('.group-ul');
+    const li = document.createElement("li");
+    li.className="bg-color my-3";
+    const btn = document.createElement('button');
+    btn.className="btn";
+    btn.appendChild(document.createTextNode(i.group.groupName));
+    li.appendChild(btn);
+    ul.appendChild(li);
+}
     setInterval(async () => {
         const response = await axios.get(`http://localhost:3000/chat/getallchat?lastId=${lastMessage.id}`, { headers: { 'Authorization': token } });
         const chats = response.data.chats;
@@ -66,7 +66,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem("messages", JSON.stringify(msg));
         }
         len = length;
-    }, 100000);
+    }, 1000);
 })
 //create group
 const createGroup = document.querySelector(".create-group");
