@@ -6,6 +6,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         alert("Please login first");
         location.replace("./signin.html")
     } else {
+        let gId = location.search.split("?")[1];
         // Get All Groups List start
         const groups = await axios.get("http://localhost:3000/group/getallgroups", {
             headers: { 'Authorization': token }
@@ -20,6 +21,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             li.appendChild(document.createTextNode(i.group.groupName));
             ul.appendChild(li);
         }
+        document.getElementById(`${gId}`).click();
         // Get All Groups List end
     }
 });

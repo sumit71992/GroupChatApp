@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const Chat = require("../models/chatModel");
 const Group = require("../models/groupsModel");
 const UserGroup = require("../models/usersGroupsModel");
+const path = require('path');
 const { Op } = require("sequelize");
 
 const createGroup = async (req, res) => {

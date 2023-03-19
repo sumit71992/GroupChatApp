@@ -98,17 +98,6 @@ create.addEventListener('click', async (e) => {
 })
 
 //open group chat
-// const div = document.querySelector('.chat-section-container');
 const getId =async (id)=>{
-    location.replace('./groupChat.html');
-    // const msg = await axios.get(`http://localhost:3000/group/getgroupmessages/${id}`,{
-    //     headers:{'Authorization':token}
-    // });
-    // const hideDiv = document.querySelector(".groupChatAppWidth");
-    // hideDiv.classList.add('hide');
-    // const groupContainer = document.createElement('div');
-    // groupContainer.className="container groupChatAppWidth"
-    // const h3 = document.createElement('h3');
-    // h3.className="text-center text-secondary mt-3"
-
+    location.replace(`./groupChat.html?${id}`);
 }
