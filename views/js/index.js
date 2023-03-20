@@ -51,7 +51,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         setInterval(async () => {
             const response = await axios.get(`http://localhost:3000/chat/getallchat?lastId=${lastMessage.id}`, { headers: { 'Authorization': token } });
             const chats = response.data.chats;
-            console.log("ch", chats)
+            
             const length = chats.length;
             if (len !== length && length > 0) {
                 for (let i = len; i < length; i++) {

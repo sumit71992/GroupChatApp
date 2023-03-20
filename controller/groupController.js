@@ -47,6 +47,8 @@ const postGroupMessage = async (req, res) => {
 const getGroupMessages = async (req, res) => {
   try {
     const groupId = req.params.id;
+    let lastId = req.query.lastId || 0;
+
     const isInGroup = await UserGroup.findAll({
       where: {
         groupId: groupId,
@@ -63,6 +65,9 @@ const getGroupMessages = async (req, res) => {
       const msg = await Chat.findAll({
         where: {
           groupId: groupId,
+          id: {
+            [Op.gt]: lastId
+          }
         },
         attributes: ['id', 'message', 'groupId', 'userId'],
         include: {
@@ -70,20 +75,22 @@ const getGroupMessages = async (req, res) => {
           attributes: ["name"],
         },
       });
-      if(msg.length>0){
+      if (msg.length > 0) {
         for (let i of msg) {
           if (i.userId === req.user.id) {
+            lastId = msg[0].id;
             return res.status(200).json({ msg, groupName });
           }
         }
-      }else{
-        return res.status(200).json({groupName});
+      } else {
+        return res.status(200).json({ groupName });
       }
-      
+
     } else {
       return res.status(400).json({ message: "You are not part of this group" });
     }
   } catch (err) {
+    console.log("Error", err);
     return res.status(500).json({ message: "Something wrong", Error: err });
   }
 };
@@ -91,21 +98,34 @@ const getGroupMessages = async (req, res) => {
 const addUserToGroup = async (req, res) => {
   try {
     const groupId = req.params.id;
-    const findGroup = await UserGroup.findAll({
+    const usr = req.body.userid;
+    const isAdmin = await UserGroup.findOne({
       where: {
         groupId: groupId,
-        userId: req.user.id
-      },
-    });
-    if (!findGroup) {
-      await UserGroup.create({
         userId: req.user.id,
-        groupId,
+        isAdmin: true
+      }
+    })
+    if (isAdmin) {
+      const findGroup = await UserGroup.findAll({
+        where: {
+          groupId: groupId,
+          userId: usr
+        },
       });
-      return res.status(200).json({ message: "Successfully added to group" });
+      if (findGroup.length < 1) {
+        await UserGroup.create({
+          userId: usr,
+          groupId,
+        });
+        return res.status(200).json({ message: "Successfully added to group" });
+      } else {
+        return res.status(200).json({ message: "You already part of this group" });
+      }
     } else {
-      return res.status(200).json({ message: "You already part of this group" });
+      return res.status(401).json({ message: "Only Admin can add user to this group" });
     }
+
 
   } catch (err) {
     console.log("Eroor", err);
@@ -148,10 +168,80 @@ const getAllGroups = async (req, res) => {
     return res.status(500).json({ message: "Something wrong", Error: err });
   }
 };
+
+const removeUserFromGroup = async (req, res) => {
+  try {
+    const groupId = req.params.id;
+    const userId = req.body.userId;
+    const isAdmin = await UserGroup.findOne({
+      where: {
+        groupId: groupId,
+        userId: req.user.id,
+        isAdmin: true
+      }
+    });
+    if (isAdmin) {
+      const isUser = await UserGroup.findOne({
+        where: {
+          groupId: groupId,
+          userId: userId
+        }
+      });
+      if (isUser) {
+        await UserGroup.destroy({
+          where: {
+            groupId: groupId,
+            userId: userId
+          }
+        })
+        return res.status(401).json({ message: "Successfully removed user from this group" });
+      } else {
+        return res.status(401).json({ message: "this user is not part of this group" });
+      }
+    } else {
+      return res.status(401).json({ message: "Only Admin can remove user from this group" });
+    }
+  } catch (err) {
+    console.log("Eroor", err);
+    return res.status(500).json({ message: "Something wrong", Error: err });
+  }
+}
+
+const getAllGroupMembers = async (req, res) => {
+  try{
+    const groupId = req.params.id;
+    const users = await UserGroup.findAll({
+      where:{
+        groupId: groupId
+      },
+      attributes:['groupId'],
+      include:{
+        model: User,
+        attributes:["name"]
+      }
+    });
+    const admin = await UserGroup.findOne({
+      where:{
+        groupId: groupId,
+        isAdmin: true
+      },
+      include:{
+        model:User,
+        attributes:["name"]
+      }
+    });
+    return res.status(200).json({groupMembers: users, adminName: admin.user.name});
+  }catch(err){
+    console.log("Eroor", err);
+    return res.status(500).json({ message: "Something wrong", Error: err });
+  }
+}
 module.exports = {
   createGroup,
   postGroupMessage,
   getGroupMessages,
   addUserToGroup,
   getAllGroups,
+  removeUserFromGroup,
+  getAllGroupMembers,
 };

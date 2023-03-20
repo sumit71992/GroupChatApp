@@ -21,7 +21,10 @@ window.addEventListener("DOMContentLoaded", async () => {
             li.appendChild(document.createTextNode(i.group.groupName));
             ul.appendChild(li);
         }
-        document.getElementById(`${gId}`).click();
+        if (gId) {
+            document.getElementById(`${gId}`).click();
+        }
+
         // Get All Groups List end
     }
 });
@@ -51,24 +54,33 @@ const getId = async (id) => {
     const ul = document.querySelector('.chat-list');
     let len = 0;
     let oldMessage = localStorage.getItem(`groupMessages${groupId}`);
+    const localStorageGroupName = localStorage.getItem(`groupName${groupId}`);
+    if (localStorageGroupName) {
+        document.querySelector('h3').innerHTML = localStorageGroupName;
+    }
     let oldMessages = oldMessage ? JSON.parse(oldMessage) : [{}];
     const msg = oldMessages;
     for (let i = len; i < oldMessages.length; i++) {
-        if (oldMessages[i].userName !== undefined) {
+        if (oldMessages[i].user !== undefined) {
             const li = document.createElement('li');
             li.className = "li p-3";
-            li.appendChild(document.createTextNode(oldMessages[i].userName + ":" + " " + oldMessages[i].message));
+            li.appendChild(document.createTextNode(oldMessages[i].user.name + ":" + " " + oldMessages[i].message));
             ul.appendChild(li);
         }
     }
-    let lastMessage = (oldMessages[oldMessages.length - 1]);
+
 
     setInterval(async () => {
-        const msgs = await axios.get(`http://localhost:3000/group/getgroupmessages/${groupId}`, {
+        let lastMessage = (oldMessages[oldMessages.length - 1]);
+        const msgs = await axios.get(`http://localhost:3000/group/getgroupmessages/${groupId}?lastId=${lastMessage.id}`, {
             headers: { 'Authorization': token }
         });
         console.log("ch", msgs)
-        document.querySelector('h3').innerHTML = msgs.data.groupName.groupName;
+
+        if (!localStorageGroupName) {
+            document.querySelector('h3').innerHTML = msgs.data.groupName.groupName;
+            localStorage.setItem(`groupName${groupId}`, msgs.data.groupName.groupName);
+        }
         const chats = msgs.data.msg;
         if (chats) {
             const length = chats.length;

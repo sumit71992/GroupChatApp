@@ -9,5 +9,7 @@ router.get('/getallgroups',userAuthentication.authenticate,groupController.getAl
 router.post('/postgroupmessage/:id',userAuthentication.authenticate,groupController.postGroupMessage);
 router.get('/getgroupmessages/:id',userAuthentication.authenticate,groupController.getGroupMessages);
 router.post('/addusertogroup/:id',userAuthentication.authenticate,groupController.addUserToGroup);
+router.delete('/removeuserfromgroup/:id',userAuthentication.authenticate,groupController.removeUserFromGroup);
+router.get('/getgroupmembers/:id', userAuthentication.authenticate,groupController.getAllGroupMembers);
 
 module.exports = router;
