@@ -8,7 +8,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     } else {
         let gId = location.search.split("?")[1];
         // Get All Groups List start
-        const groups = await axios.get("http://localhost:3000/group/getallgroups", {
+        const groups = await axios.get("http://localhost:4000/group/getallgroups", {
             headers: { 'Authorization': token }
         });
         const groupList = groups.data.groups;
@@ -35,7 +35,7 @@ const sendGroupMsg = async (id) => {
     const obj = {
         message: msg.value,
     }
-    await axios.post(`http://localhost:3000/group/postgroupmessage/${id}`, obj, {
+    await axios.post(`http://localhost:4000/group/postgroupmessage/${id}`, obj, {
         headers: { 'Authorization': token }
     });
     msg.value = ""
@@ -72,7 +72,7 @@ const getId = async (id) => {
 
     setInterval(async () => {
         let lastMessage = (oldMessages[oldMessages.length - 1]);
-        const msgs = await axios.get(`http://localhost:3000/group/getgroupmessages/${groupId}?lastId=${lastMessage.id}`, {
+        const msgs = await axios.get(`http://localhost:4000/group/getgroupmessages/${groupId}?lastId=${lastMessage.id}`, {
             headers: { 'Authorization': token }
         });
         console.log("ch", msgs)

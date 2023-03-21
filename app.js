@@ -11,13 +11,11 @@ const Chat = require('./models/chatModel');
 const Group = require('./models/groupsModel');
 const UserGroup = require('./models/usersGroupsModel');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 const app = express();
 
-app.use(cors({
-    origin: "http://127.0.0.1:5500"
-}));
+app.use(cors());
 app.use(express.json())
 
 app.use("/user", userRoutes);

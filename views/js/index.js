@@ -7,7 +7,7 @@ msg.addEventListener("click", async (e) => {
     const obj = {
         message: message.value
     }
-    const response = await axios.post("http://localhost:3000/chat/postmessage", obj, { headers: { 'Authorization': token } });
+    const response = await axios.post("http://localhost:4000/chat/postmessage", obj, { headers: { 'Authorization': token } });
     message.value = "";
     console.log(response)
 })
@@ -34,7 +34,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         let lastMessage = (oldMessages[oldMessages.length - 1]);
 
         // Get All Groups List start
-        const groups = await axios.get("http://localhost:3000/group/getallgroups", {
+        const groups = await axios.get("http://localhost:4000/group/getallgroups", {
             headers: { 'Authorization': token }
         });
         const groupList = groups.data.groups;
@@ -49,7 +49,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
         // Get All Groups List end
         setInterval(async () => {
-            const response = await axios.get(`http://localhost:3000/chat/getallchat?lastId=${lastMessage.id}`, { headers: { 'Authorization': token } });
+            const response = await axios.get(`http://localhost:4000/chat/getallchat?lastId=${lastMessage.id}`, { headers: { 'Authorization': token } });
             const chats = response.data.chats;
             
             const length = chats.length;
@@ -90,7 +90,7 @@ create.addEventListener('click', async (e) => {
         const obj = {
             groupName,
         }
-        await axios.post("http://localhost:3000/group/creategroup", obj, { headers: { 'Authorization': token } });
+        await axios.post("http://localhost:4000/group/creategroup", obj, { headers: { 'Authorization': token } });
         await location.reload();
     } else {
         alert("group name can't be empty");
