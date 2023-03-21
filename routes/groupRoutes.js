@@ -11,5 +11,6 @@ router.get('/getgroupmessages/:id',userAuthentication.authenticate,groupControll
 router.post('/addusertogroup/:id',userAuthentication.authenticate,groupController.addUserToGroup);
 router.delete('/removeuserfromgroup/:id',userAuthentication.authenticate,groupController.removeUserFromGroup);
 router.get('/getgroupmembers/:id', userAuthentication.authenticate,groupController.getAllGroupMembers);
+router.put('/makeadmin/:id',userAuthentication.authenticate,groupController.makeOtherMemberAdmin);
 
 module.exports = router;
