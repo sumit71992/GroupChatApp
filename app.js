@@ -12,7 +12,7 @@ const Chat = require('./models/chatModel');
 const Group = require('./models/groupsModel');
 const UserGroup = require('./models/usersGroupsModel');
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 const app = express();
 
