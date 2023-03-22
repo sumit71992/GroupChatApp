@@ -1,5 +1,5 @@
 const token = localStorage.getItem("token");
-const url = "http://3.109.42.131:4000";
+const url = "http://35.154.107.152:4000";
 
 window.addEventListener("DOMContentLoaded", async () => {
     if (!token) {
