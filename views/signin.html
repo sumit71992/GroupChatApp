@@ -44,6 +44,7 @@
     </div>
     <script>
         //signin
+        const url = "http://3.109.42.131:4000";
         const signin = document.querySelector("#signin");
         const email = document.getElementById("email");
         let message = document.querySelector(".message");
@@ -55,7 +56,7 @@
                     email: email.value,
                     password: password.value
                 };
-                const user = await axios.post('http://localhost:4000/user/signin', obj);
+                const user = await axios.post(url+'/user/signin', obj);
                 let msg = user.data.message;
                 message.className = 'text-success text-center';
                 message.appendChild(document.createTextNode(msg));

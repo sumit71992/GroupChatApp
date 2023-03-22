@@ -21,6 +21,13 @@ app.use(express.json())
 app.use("/user", userRoutes);
 app.use("/chat", chatRoutes);
 app.use("/group", groupRoutes);
+app.use((req, res) => {
+  if(req.url=="/"){
+    res.sendFile(path.join(__dirname, `views/signin.html`));
+  }else{
+    res.sendFile(path.join(__dirname, `views/${req.url}`));
+  }
+});
 
 Chat.belongsTo(User);
 User.hasMany(Chat);
