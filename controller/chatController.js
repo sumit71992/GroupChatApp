@@ -7,10 +7,11 @@ const { Op } = require("sequelize");
 const postChat = async (req, res, next) => {
   try {
     const message = req.body.message;
-    await req.user.createChat({
-      message,
-      userName: req.user.name,
-    });
+    console.log(req.body.image)
+    // await req.user.createChat({
+    //   message,
+    //   userName: req.user.name,
+    // });
     return res.status(200).json({ message: "chat added" });
   } catch (err) {
     return res.status(200).json({ message: "Someting wrong", Error: err });

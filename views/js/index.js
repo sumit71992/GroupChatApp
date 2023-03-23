@@ -1,12 +1,15 @@
-const url = "http://35.154.190.87:3000";
+const url = "http://localhost:3000";
 const msg = document.querySelector('.msg');
 const message = document.getElementById('message');
+const image =document.getElementById("image"); 
 const token = localStorage.getItem("token");
 // send messages
 msg.addEventListener("click", async (e) => {
     e.preventDefault();
+    console.log(image.value)
     const obj = {
-        message: message.value
+        message: message.value,
+        image: image[0].name
     }
     const response = await axios.post(url+"/chat/postmessage", obj, { headers: { 'Authorization': token } });
     message.value = "";
@@ -76,7 +79,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 localStorage.setItem("messages", JSON.stringify(msg));
             }
             len = length;
-        }, 1000);
+        }, 100000);
     }
 })
 //create group
