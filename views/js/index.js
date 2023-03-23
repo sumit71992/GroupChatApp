@@ -1,4 +1,4 @@
-const url = "http://localhost:3000";
+const url = "http://35.154.190.87:3000";
 const msg = document.querySelector('.msg');
 const message = document.getElementById('message');
 const token = localStorage.getItem("token");
