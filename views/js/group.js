@@ -9,6 +9,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     } else {
         let gId = location.search.split("?")[1];
         // Get All Groups List start
+        document.querySelector(".public-chat").addEventListener('click',()=>{
+            location.replace("./index.html");
+        })
         const groups = await axios.get(url+"/group/getallgroups", {
             headers: { 'Authorization': token }
         });
@@ -29,7 +32,27 @@ window.addEventListener("DOMContentLoaded", async () => {
         // Get All Groups List end
     }
 });
-
+//create group
+const createGroup = document.querySelector(".create-group");
+createGroup.addEventListener('click', async (e) => {
+    document.querySelector('.create-group-container').classList.add("hide");
+    document.querySelector('.create-group-form').classList.remove('hide');
+});
+const gName = document.getElementById('groupname');
+const create = document.querySelector('.create');
+create.addEventListener('click', async (e) => {
+    e.preventDefault()
+    const groupName = gName.value;
+    if (groupName !== "") {
+        const obj = {
+            groupName,
+        }
+        await axios.post(url+"/group/creategroup", obj, { headers: { 'Authorization': token } });
+        await location.reload();
+    } else {
+        alert("group name can't be empty");
+    }
+});
 //open group chat and send group message
 const sendGroupMsg = async (id) => {
     const msg = document.getElementById('message');

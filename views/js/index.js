@@ -35,6 +35,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         let lastMessage = (oldMessages[oldMessages.length - 1]);
 
         // Get All Groups List start
+        document.querySelector(".public-chat").addEventListener('click',()=>{
+            location.replace("./index.html");
+        })
         const groups = await axios.get(url+"/group/getallgroups", {
             headers: { 'Authorization': token }
         });
@@ -96,7 +99,7 @@ create.addEventListener('click', async (e) => {
     } else {
         alert("group name can't be empty");
     }
-})
+});
 
 //open group chat
 const getId =async (id)=>{
