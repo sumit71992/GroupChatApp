@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const compression = require("compression");
+const CronJob = require('cron').CronJob;
 
 const sequelize = require("./util/database");
 const userRoutes = require("./routes/userRoutes");
@@ -12,6 +13,7 @@ const User = require("./models/userModel");
 const Chat = require("./models/chatModel");
 const Group = require("./models/groupsModel");
 const UserGroup = require("./models/usersGroupsModel");
+const Archive = require("./models/archiveModel");
 
 const port = process.env.PORT || 3000;
 
@@ -54,3 +56,21 @@ sequelize
     });
   })
   .catch((err) => console.log(err));
+  var job = new CronJob({
+
+    cronTime: '00 00 00 * * * ',
+    onTick: async function () {
+      const response=await Chat.findAll()
+      for(let i=0;i<response.length;i++){
+       const data=await Archive.create({
+           message:response[i].message,
+           userId:response[i].userId,
+           groupId:response[i].groupId,
+           userName:response[i].userName
+       })
+      await Chat.destroy({where:{id:response[i].id}});
+      }
+    },
+    start: true,
+    runOnInit: false
+});

@@ -132,7 +132,7 @@ const addUserToGroup = async (req, res) => {
         .json({ message: "Only Admin can add user to this group" });
     }
   } catch (err) {
-    console.log("Eroor", err);
+    console.log("Error", err);
     return res.status(500).json({ message: "Something wrong", Error: err });
   }
 };
